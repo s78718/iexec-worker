@@ -15,6 +15,20 @@ group = 'com.iexec.worker'
 sourceCompatibility = 11
 targetCompatibility = 11
 
+sourceSets {
+    // integration tests
+    itest {
+        java {
+            srcDir file('src/itest/java')
+            compileClasspath += main.output
+            runtimeClasspath += main.output
+        }
+        resources {
+            srcDir file('src/itest/resources')
+        }
+    }
+}
+
 repositories {
     mavenCentral()
     jcenter()
@@ -27,6 +41,9 @@ repositories {
 }
 
 configurations {
+    itestImplementation.extendsFrom testImplementation
+    itestRuntimeOnly.extendsFrom testRuntimeOnly
+    itestAnnotationProcessor.extendsFrom testAnnotationProcessor
     deployerJars
 }
 
@@ -43,8 +60,8 @@ dependencyManagement {
 
 dependencies {
     // iexec
-    compile "com.iexec.common:iexec-common:$iexecCommonVersion"
-    //compile files("../iexec-common/build/libs/iexec-common-${iexecCommonVersion}.jar")
+    // compile "com.iexec.common:iexec-common:$iexecCommonVersion"
+    compile files("../iexec-common/build/libs/iexec-common-${iexecCommonVersion}.jar")
 
     // spring
     compile("org.springframework.boot:spring-boot-starter") {
@@ -199,6 +216,15 @@ task pushImage(type: Exec) {
             "docker push ${getDockerImageNameShortCommit()} && " +
             "docker logout"
     dependsOn tasks.buildImage
+}
+
+task itest(type:Test) {
+    description = "Run integration tests (src/itest/...)."
+    // enabled isDev
+    testClassesDirs = sourceSets.itest.output.classesDirs
+    classpath = sourceSets.itest.runtimeClasspath
+    outputs.upToDateWhen { false } // run always
+    useJUnitPlatform()
 }
 
 // ##################
