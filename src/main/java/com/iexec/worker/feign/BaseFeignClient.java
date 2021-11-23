@@ -58,16 +58,18 @@ public abstract class BaseFeignClient {
         return makeHttpCall(call, args, action, false);
     }
 
-    <T> ResponseEntity<T> makeHttpCall(HttpCall<T> call, Map<String, Object> args, String action, boolean infiniteRetry) {
+    <T> ResponseEntity<T> makeHttpCall(HttpCall<T> call, Map<String, Object> args, String action, boolean forceInfiniteRetry) {
         int attempt = 0;
         int status = -1;
 
-        while (shouldRetry(infiniteRetry, attempt, status)) {
+        while (shouldRetry(forceInfiniteRetry, attempt, status)) {
             try {
                 return call.apply(args);
             } catch (FeignException e) {
                 status = e.status();
-
+                log.error("Error while making http call "
+                        + "[action:{}, status:{}, attempt:{}, forceInfiniteRetry:{}]",
+                        action, toHttpStatus(status), attempt, forceInfiniteRetry);
                 if (is4xxClientError(status) && args != null && args.containsKey("jwtoken")) {
                     // login and update token for the next call
                     String newJwToken = login();
@@ -84,6 +86,15 @@ public abstract class BaseFeignClient {
         return ResponseEntity.status(status).build();
     }
 
+    /**
+     * Check if http call should be retried.
+     * Note: we always retry when infiniteRetry == true or when status < 0.
+     * 
+     * @param infiniteRetry if we should retry always
+     * @param attempt number of the current retry
+     * @param status status of the last http call
+     * @return true if (infiniteRetry == null) or (status < 0) or (MAX_ATTEMPTS is not reached), false otherwise
+     */
     private boolean shouldRetry(boolean infiniteRetry, int attempt, int status) {
         return infiniteRetry || attempt < MAX_ATTEMPTS || status < 0;
     }
