@@ -14,41 +14,13 @@
 * limitations under the License.
 */
 
-package com.iexec.worker.abort;
+package com.iexec.worker;
 
-import com.iexec.worker.CommonTestSetup;
-import com.iexec.worker.chain.CredentialsService;
-import com.iexec.worker.chain.IexecHubService;
-import com.iexec.worker.chain.Web3jService;
-import com.iexec.worker.feign.client.CoreClient;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.Spy;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.web3j.protocol.Web3j;
 
 @SpringBootTest
 public class TaskManagementIT extends CommonTestSetup {
-
-    @Spy
-    @Autowired
-    private IexecHubService iexecHubService;
-
-    @Spy
-    @Autowired
-    private Web3jService web3jService;
-
-    @Spy
-    @Autowired
-    private CredentialsService credentialsService;
-
-    @Spy
-    @Autowired
-    private CoreClient coreClient;
-
-    @Mock
-    private Web3j web3jMock;
 
     @Override
     public void setup() {
@@ -57,7 +29,6 @@ public class TaskManagementIT extends CommonTestSetup {
 
     @Test
     public void shouldProperlyAbortTask() {
-
         // Mock http calls
         // Provide task to worker.
         // Start
