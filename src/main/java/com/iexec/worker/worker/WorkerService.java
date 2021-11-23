@@ -132,7 +132,7 @@ public class WorkerService {
         dockerService.stopAllRunningContainers();
         // give 1 second to threads watching stopped containers
         // to remove them.
-        WaitUtils.sleep(1);
+        WaitUtils.sleepSeconds(1);
         log.warn("The worker is about to restart");
         restartEndpoint.restart();
     }
