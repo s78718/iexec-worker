@@ -68,8 +68,8 @@ public abstract class BaseFeignClient {
             } catch (FeignException e) {
                 status = e.status();
                 log.error("Error while making http call "
-                        + "[action:{}, status:{}, attempt:{}, forceInfiniteRetry:{}]",
-                        action, toHttpStatus(status), attempt, forceInfiniteRetry);
+                        + "[action:{}, status:{}, attempt:{}, forceInfiniteRetry:{}, message:{}]",
+                        action, toHttpStatus(status), attempt, forceInfiniteRetry, e.getMessage());
                 if (is4xxClientError(status) && args != null && args.containsKey("jwtoken")) {
                     // login and update token for the next call
                     String newJwToken = login();
