@@ -30,9 +30,9 @@ sourceSets {
 }
 
 repositories {
-    mavenLocal()
     mavenCentral()
     jcenter()
+    mavenLocal()
     maven {
         url "https://nexus.iex.ec/repository/maven-public/"
     }
