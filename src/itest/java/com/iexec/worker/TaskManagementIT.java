@@ -17,9 +17,7 @@
 package com.iexec.worker;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
 public class TaskManagementIT extends CommonTestSetup {
 
     @Override
