@@ -18,15 +18,20 @@ package com.iexec.worker.config;
 
 import com.iexec.common.config.PublicConfiguration;
 import com.iexec.worker.feign.CustomCoreFeignClient;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class PublicConfigurationService {
 
     private final PublicConfiguration publicConfiguration;
 
     public PublicConfigurationService(CustomCoreFeignClient customCoreFeignClient) {
+        log.info("Fetching configuration from core");
         this.publicConfiguration = customCoreFeignClient.getPublicConfiguration();
+        log.info("Fetched configuration from core [config:{}]", publicConfiguration);
+        // TODO validate received configuration
     }
 
     public PublicConfiguration getPublicConfiguration() {
