@@ -18,12 +18,12 @@ package com.iexec.worker;
 
 import org.junit.jupiter.api.Test;
 
-public class TaskManagementIT extends CommonTestSetup {
+public class TaskManagementIT extends TestSetup {
 
-    @Override
-    public void setup() {
-        super.setup();
-    }
+    // @Override
+    // public void setup() {
+    //     super.setup();
+    // }
 
     @Test
     public void shouldProperlyAbortTask() {
